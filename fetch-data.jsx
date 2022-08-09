@@ -1,3 +1,33 @@
+const Pagination = ({items, pageSize, onPageChange}) => {
+    const {Button} = ReactBootstrap;
+    if(items.length <= 1) return null;
+    //using .ceil will round the resulting number to make it whole
+    let num = Math.ceil(items.length / pageSize);
+    let pages = range(1, num + 1);
+    const list = pages.map(page => {
+        return ( 
+            //this will return a button for each page and allow on click to move to the next page
+            <Button key={page} onClick={onPageChange} className="page-item">{page}</Button>
+        );
+    });
+    return <nav>
+        {/* prints a list of the buttons */}
+        <ul className="pagination">{list}</ul>
+    </nav>
+};
+
+const range = (start, end) => {
+    return Array(end - start + 1)
+    .fill(0)
+    .map((item, i) => start + 1);
+};
+
+function paginate(items, pageNumber, pageSize) {
+    const start = (pageNumber - 1) * pageSize;
+    let page = items.slice(start, start + pageSize);
+    return page;
+};
+
 const useDataApi = (initalUrl, initialData) => {
   const { useState, useEffect, useReducer } = React;
   const [url, setUrl] = useState(initalUrl);
@@ -56,7 +86,7 @@ const dataFetchReducer = (state, action) => {
         throw new Error();
   }
 };
-
+//App gets data from Hacker News url
 function App() {
   const { Fragment, useState, useEffect, useReducer } = React;
   const { query, setQuery } = useState("MIT");
@@ -68,6 +98,7 @@ function App() {
       hits: [],
     }
   );
+  
 
   return;
 }
