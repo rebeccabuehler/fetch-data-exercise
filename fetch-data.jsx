@@ -10,16 +10,18 @@ const Pagination = ({items, pageSize, onPageChange}) => {
             <Button key={page} onClick={onPageChange} className="page-item">{page}</Button>
         );
     });
-    return <nav>
+    return (
+    <nav>
         {/* prints a list of the buttons */}
         <ul className="pagination">{list}</ul>
     </nav>
+    );
 };
 
 const range = (start, end) => {
     return Array(end - start + 1)
     .fill(0)
-    .map((item, i) => start + 1);
+    .map((item, i) => start + i);
 };
 
 function paginate(items, pageNumber, pageSize) {
