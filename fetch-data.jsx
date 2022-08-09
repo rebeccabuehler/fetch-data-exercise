@@ -95,11 +95,12 @@ const dataFetchReducer = (state, action) => {
 //App gets data from Hacker News url
 function App() {
   const { Fragment, useState, useEffect, useReducer } = React;
-  const [query, setQuery] = useState("MIT");
+  const [query, setQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [{ data, isLoading, isError }, doFetch] = useDataApi(
-    "https://hn.algolia.com/api/v1/search?query=MIT",
+    //starts with random news till search parameter is put in
+    "https://hn.algolia.com/api/v1/search?query",
     {
       hits: [],
     }
@@ -125,6 +126,7 @@ function App() {
         <div className="d-inline-flex p-2">
         <input
           type="text"
+          placeholder="Search parameter"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
         />
