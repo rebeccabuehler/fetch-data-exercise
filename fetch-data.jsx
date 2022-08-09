@@ -98,7 +98,54 @@ function App() {
       hits: [],
     }
   );
-  
 
-  return;
-}
+  const handlePageChange = e => {
+    setCurrentPage(Number(e.target.textContent));
+  };
+  let page = data.hits;
+  if(page.length >= 1) {
+    page = paginate(page, currentPage, pageSize);
+    console.log(`current page: ${currentPage}`);
+  }
+
+  return (
+    <Fragment>
+      <form
+        onSubmit={event => {
+          doFetch("http://hn.algolia.com/api/v1/search?query=${query}");
+          event.preventDefault();
+        }}
+      >
+        <input
+          type="text"
+          value={query}
+          onChange={event => setQuery(event.target.value)}
+        />
+        <button type="submit">Search</button>
+      </form>
+
+      {isError && <div>Something went wrong ...</div>}
+
+      {isLoading ? (
+        <div>Loading ...</div>
+      ) : (
+        <ul className="list-group">
+          {page.map(item => (
+            <li className="list-group-item" key={item.objectID}>
+              <a href={item.url}>{item.title}</a>
+            </li>
+          ))}
+        </ul>
+      )}
+      <Pagination
+        items={data.hits}
+        pageSize={pageSize}
+        onPageChange={handlePageChange}
+      ></Pagination>
+    </Fragment>
+  );
+};
+
+// ========================================
+ReactDOM.render(<App />, document.getElementById("root"));
+
