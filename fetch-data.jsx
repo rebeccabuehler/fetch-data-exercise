@@ -89,9 +89,9 @@ const dataFetchReducer = (state, action) => {
 //App gets data from Hacker News url
 function App() {
   const { Fragment, useState, useEffect, useReducer } = React;
-  const { query, setQuery } = useState("MIT");
-  const { currentPage, setCurrentPage } = useState(1);
-  const pageSize = 10;
+  const [ query, setQuery ] = useState("MIT");
+  const [ currentPage, setCurrentPage ] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [{ data, isLoading, isError }, doFetch] = useDataApi(
     "https://hn.algolia.com/api/v1/search?query=MIT",
     {
@@ -122,6 +122,12 @@ function App() {
           onChange={event => setQuery(event.target.value)}
         />
         <button type="submit">Search</button>
+        <input
+          type="number"
+          value={pageSize}
+          onChange={event => setPageSize(Number(event.target.value))}
+        />
+        <button>Please Enter A Page Size</button>
       </form>
 
       {isError && <div>Something went wrong ...</div>}
