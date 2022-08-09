@@ -1,34 +1,38 @@
-const Pagination = ({items, pageSize, onPageChange}) => {
-    const {Button} = ReactBootstrap;
-    if(items.length <= 1) return null;
-    //using .ceil will round the resulting number to make it whole
-    let num = Math.ceil(items.length / pageSize);
-    let pages = range(1, num + 1);
-    const list = pages.map(page => {
-        return ( 
-            //this will return a button for each page and allow on click to move to the next page
-            <Button key={page} onClick={onPageChange} className="page-item">{page}</Button>
-        );
-    });
+const Pagination = ({ items, pageSize, onPageChange }) => {
+  const { Button } = ReactBootstrap;
+  if (items.length <= 1) return null;
+  //using .ceil will round the resulting number to make it whole
+  let num = Math.ceil(items.length / pageSize);
+  let pages = range(1, num + 1);
+  const list = pages.map((page) => {
     return (
-    <nav>
-        {/* prints a list of the buttons */}
-        <ul className="pagination">{list}</ul>
-    </nav>
+      //this will return a button for each page and allow on click to move to the next page
+      <div className="d-inline-flex p-2">
+      <Button key={page} onClick={onPageChange} className="btn btn-secondary">
+        {page}
+      </Button>
+      </div>
     );
+  });
+  return (
+    <nav>
+      {/* prints a list of the buttons */}
+      <ul className="pagination">{list}</ul>
+    </nav>
+  );
 };
 
 const range = (start, end) => {
-    return Array(end - start + 1)
+  return Array(end - start + 1)
     .fill(0)
     .map((item, i) => start + i);
 };
 
 function paginate(items, pageNumber, pageSize) {
-    const start = (pageNumber - 1) * pageSize;
-    let page = items.slice(start, start + pageSize);
-    return page;
-};
+  const start = (pageNumber - 1) * pageSize;
+  let page = items.slice(start, start + pageSize);
+  return page;
+}
 
 const useDataApi = (initalUrl, initialData) => {
   const { useState, useEffect, useReducer } = React;
@@ -69,30 +73,30 @@ const dataFetchReducer = (state, action) => {
       return {
         ...state,
         isLoading: true,
-        isError: false
+        isError: false,
       };
     case "FETCH_SUCCESS":
       return {
         ...state,
         isLoading: false,
         isError: false,
-        data: action.payload
+        data: action.payload,
       };
     case "FETCH_FAILURE":
       return {
         ...state,
         isLoading: false,
-        isError: true
+        isError: true,
       };
     default:
-        throw new Error();
+      throw new Error();
   }
 };
 //App gets data from Hacker News url
 function App() {
   const { Fragment, useState, useEffect, useReducer } = React;
-  const [ query, setQuery ] = useState("MIT");
-  const [ currentPage, setCurrentPage ] = useState(1);
+  const [query, setQuery] = useState("MIT");
+  const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [{ data, isLoading, isError }, doFetch] = useDataApi(
     "https://hn.algolia.com/api/v1/search?query=MIT",
@@ -101,11 +105,11 @@ function App() {
     }
   );
 
-  const handlePageChange = e => {
+  const handlePageChange = (e) => {
     setCurrentPage(Number(e.target.textContent));
   };
   let page = data.hits;
-  if(page.length >= 1) {
+  if (page.length >= 1) {
     page = paginate(page, currentPage, pageSize);
     console.log(`current page: ${currentPage}`);
   }
@@ -113,22 +117,27 @@ function App() {
   return (
     <Fragment>
       <form
-        onSubmit={event => {
+        onSubmit={(event) => {
           doFetch(`http://hn.algolia.com/api/v1/search?query=${query}`);
           event.preventDefault();
         }}
       >
+        <div className="d-inline-flex p-2">
         <input
           type="text"
           value={query}
-          onChange={event => setQuery(event.target.value)}
+          onChange={(event) => setQuery(event.target.value)}
         />
         <button type="submit">Search</button>
+        </div>
+
+        <div className="d-inline-flex">
         <input
           type="number"
           value={pageSize}
-          onChange={event => setPageSize(Number(event.target.value))}
+          onChange={(event) => setPageSize(Number(event.target.value))}
         />
+        </div>
         <button>Please Enter A Page Size</button>
       </form>
 
@@ -137,10 +146,12 @@ function App() {
       {isLoading ? (
         <div>Loading ...</div>
       ) : (
-        <ul className="list-group">
-          {page.map(item => (
+        <ul className="list-group-flush">
+          {page.map((item) => (
             <li className="list-group-item" key={item.objectID}>
-              <a href={item.url}>{item.title}</a>
+              <a className="text-info" href={item.url}>
+                {item.title}
+              </a>
             </li>
           ))}
         </ul>
@@ -152,8 +163,7 @@ function App() {
       ></Pagination>
     </Fragment>
   );
-};
+}
 
 // ========================================
 ReactDOM.render(<App />, document.getElementById("root"));
-
