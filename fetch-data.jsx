@@ -8,9 +8,9 @@ const Pagination = ({ items, pageSize, onPageChange }) => {
     return (
       //this will return a button for each page and allow on click to move to the next page
       <div className="d-inline-flex p-2">
-      <Button key={page} onClick={onPageChange} className="btn btn-secondary">
-        {page}
-      </Button>
+        <Button key={page} onClick={onPageChange} className="btn btn-primary">
+          {page}
+        </Button>
       </div>
     );
   });
@@ -123,24 +123,26 @@ function App() {
           event.preventDefault();
         }}
       >
-        <div className="d-inline-flex p-2">
-        <input
-          type="text"
-          placeholder="Search parameter"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-        />
-        <button type="submit">Search</button>
-        </div>
+        <div className="row g-3 align-items-center">
+          <div className="col-auto">
+            <label for="inputSearchParam" className="col-form-label">Search Parameter</label>
+          </div>
+          <div className="col-auto">
+            <input type="text" id="searchParameter" className="form-control" aria-describedby="searchHelp" 
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}/>
+          </div>
+          <button type="submit" className="btn btn-primary">Search</button>
 
-        <div className="d-inline-flex">
-        <input
-          type="number"
-          value={pageSize}
-          onChange={(event) => setPageSize(Number(event.target.value))}
-        />
+          <div className="col-auto">
+            <label for="pageSize" className="col-form-label">Page Size</label>
+          </div>
+          <div className="col-auto">
+            <input type="number" id="inputPageSize" className="form-control" aria-describedby="sizeHelp"
+            value={pageSize}
+            onChange={(event) => setPageSize(Number(event.target.value))}/>
+          </div>
         </div>
-        <button>Please Enter A Page Size</button>
       </form>
 
       {isError && <div>Something went wrong ...</div>}
@@ -148,10 +150,10 @@ function App() {
       {isLoading ? (
         <div>Loading ...</div>
       ) : (
-        <ul className="list-group-flush">
+        <ul className="list-group">
           {page.map((item) => (
             <li className="list-group-item" key={item.objectID}>
-              <a className="text-info" href={item.url}>
+              <a href={item.url}>
                 {item.title}
               </a>
             </li>
